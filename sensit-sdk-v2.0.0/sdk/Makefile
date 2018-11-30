@@ -7,14 +7,14 @@
 # SDK LIBRARY
 # -----------
 LIB_NAME = SENSIT_SDK_V2.0.0
-LIB_PATH = lib
+LIB_PATH = "C:/Users/Xavier/OneDrive/HEI/HEI\ 4/Semestre\ 1/IoT/hei-2018-2019-lab-sens-it-lencou-lecoeur/sensit-sdk-v2.0.0/sdk/lib"
 
 
 # --------------
 # OUTPUT FOLDERS
 # --------------
-BIN_PATH = bin
-OBJ_PATH = obj
+BIN_PATH = "C:/Users/Xavier/OneDrive/HEI/HEI\ 4/Semestre\ 1/IoT/hei-2018-2019-lab-sens-it-lencou-lecoeur/sensit-sdk-v2.0.0/bin"
+OBJ_PATH = "C:/Users/Xavier/OneDrive/HEI/HEI\ 4/Semestre\ 1/IoT/hei-2018-2019-lab-sens-it-lencou-lecoeur/sensit-sdk-v2.0.0/sdk/lib"
 
 
 # ------------
@@ -30,16 +30,16 @@ SIZE_OUTPUT = $(OUTPUT_NAME).siz
 # ---------
 # TOOLCHAIN
 # ---------
-CC = arm-none-eabi-gcc
-BIN_TOOL  = arm-none-eabi-objcopy
-SIZE_TOOL = arm-none-eabi-size
+CC = "D:\GNU Tools Arm Embedded\7 2018-q2-update\bin\arm-none-eabi-gcc"
+BIN_TOOL  = "D:\GNU Tools Arm Embedded\7 2018-q2-update\bin\arm-none-eabi-objcopy"
+SIZE_TOOL = "D:\GNU Tools Arm Embedded\7 2018-q2-update\bin\arm-none-eabi-size"
 
 
 # -------------------
 # COMPILATION OPTIONS
 # -------------------
 CC_OPT   = -mcpu=cortex-m0 -mthumb -mfloat-abi=soft -g -Os -Wall -fmessage-length=0 -ffunction-sections
-CC_INC   = -Iinc -Iinc/sensit -Iinc/sigfox -Iinc/resources -Iinc/radio -Iinc/sensors -Iinc/tools
+CC_INC   = -Iinc -Iinc\sensit -Iinc\sigfox -Iinc\resources -Iinc\radio -Iinc\sensors -Iinc\tools
 CC_FLAGS = -DUSB
 
 
@@ -48,10 +48,10 @@ CC_FLAGS = -DUSB
 # ---------------
 VPATH += \
 src \
-src/resources \
-src/sensors \
-src/radio \
-src/tools
+src\resources \
+src\sensors \
+src\radio \
+src\tools
 
 
 # ------------
@@ -79,7 +79,7 @@ OBJS = $(addprefix $(OBJ_PATH)/,$(OBJ_LIST))
 # ------------
 # LINK OPTIONS
 # ------------
-LD_OPT  = -L$(LIB_PATH) -T "LinkerScript.ld" -nostartfiles -nodefaultlibs -nostdlib -Xlinker --gc-sections -Wl,-Map,"$(BIN_PATH)/$(MAP_OUTPUT)"
+LD_OPT  = -L$(LIB_PATH) -T "LinkerScript.ld" -nostartfiles -nodefaultlibs -nostdlib -Xlinker --gc-sections -Wl,-Map,"$(BIN_PATH)\$(MAP_OUTPUT)"
 
 
 # -----------------
@@ -97,7 +97,7 @@ modem: clean dir $(OBJS) main_MODEM bin
 # ----------------
 # OBJECTS BUILDING
 # ----------------
-$(OBJ_PATH)/%.o: %.c
+$(OBJ_PATH)\%.o: %.c
 	@echo 'Building file: $@'
 	@echo 'Invoking: Cross ARM C Compiler'
 	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $@ $<
@@ -105,74 +105,74 @@ $(OBJ_PATH)/%.o: %.c
 	@echo ' '
 
 main:
-	@echo 'Building file: $(OBJ_PATH)/main.o'
+	@echo 'Building file: $(OBJ_PATH)\main.o'
 	@echo 'Invoking: Cross ARM C Compiler'
-	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)/main.o src/main.c
-	@echo 'Finished building: $(OBJ_PATH)/main.o'
+	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)\main.o src\main.c
+	@echo 'Finished building: $(OBJ_PATH)\main.o'
 	@echo ' '
 
 main_TEMPERATURE:
-	@echo 'Building file: $(OBJ_PATH)/main.o'
+	@echo 'Building file: $(OBJ_PATH)\main.o'
 	@echo 'Invoking: Cross ARM C Compiler'
-	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)/main.o src/main_TEMPERATURE.c
-	@echo 'Finished building: $(OBJ_PATH)/main.o'
+	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)\main.o src\main_TEMPERATURE.c
+	@echo 'Finished building: $(OBJ_PATH)\main.o'
 	@echo ' '
 
 main_LIGHT:
-	@echo 'Building file: $(OBJ_PATH)/main.o'
+	@echo 'Building file: $(OBJ_PATH)\main.o'
 	@echo 'Invoking: Cross ARM C Compiler'
-	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)/main.o src/main_LIGHT.c
-	@echo 'Finished building: $(OBJ_PATH)/main.o'
+	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)\main.o src\main_LIGHT.c
+	@echo 'Finished building: $(OBJ_PATH)\main.o'
 	@echo ' '
 
 main_VIBRATION:
-	@echo 'Building file: $(OBJ_PATH)/main.o'
+	@echo 'Building file: $(OBJ_PATH)\main.o'
 	@echo 'Invoking: Cross ARM C Compiler'
-	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)/main.o src/main_VIBRATION.c
-	@echo 'Finished building: $(OBJ_PATH)/main.o'
+	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)\main.o src\main_VIBRATION.c
+	@echo 'Finished building: $(OBJ_PATH)\main.o'
 	@echo ' '
 
 main_MAGNET:
-	@echo 'Building file: $(OBJ_PATH)/main.o'
+	@echo 'Building file: $(OBJ_PATH)\main.o'
 	@echo 'Invoking: Cross ARM C Compiler'
-	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)/main.o src/main_MAGNET.c
-	@echo 'Finished building: $(OBJ_PATH)/main.o'
+	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)\main.o src\main_MAGNET.c
+	@echo 'Finished building: $(OBJ_PATH)\main.o'
 	@echo ' '
 
 main_MODEM:
-	@echo 'Building file: $(OBJ_PATH)/main.o'
+	@echo 'Building file: $(OBJ_PATH)\main.o'
 	@echo 'Invoking: Cross ARM C Compiler'
-	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)/main.o src/main_MODEM.c
-	@echo 'Finished building: $(OBJ_PATH)/main.o'
+	$(CC) $(CC_OPT) $(CC_FLAGS) $(CC_INC) -c -o $(OBJ_PATH)\main.o src\main_MODEM.c
+	@echo 'Finished building: $(OBJ_PATH)\main.o'
 	@echo ' '
 
 
 # ------------------------
-# ELF / BIN / SIZ BUILDING
+# ELF \ BIN \ SIZ BUILDING
 # ------------------------
-$(BIN_PATH)/$(ELF_OUTPUT):
+$(BIN_PATH)\$(ELF_OUTPUT):
 	@echo 'Building target: $(ELF_OUTPUT)'
 	@echo 'Invoking: Cross ARM C Linker'
-	$(CC) $(CC_OPT) $(LD_OPT) -o $@ $(OBJS) $(OBJ_PATH)/main.o -l$(LIB_NAME)
+	$(CC) $(CC_OPT) $(LD_OPT) -o $@ $(OBJS) $(OBJ_PATH)\main.o -l$(LIB_NAME)
 	@echo 'Finished building: $(ELF_OUTPUT)'
 	@echo ' '
 
-$(BIN_PATH)/$(BIN_OUTPUT):
+$(BIN_PATH)\$(BIN_OUTPUT):
 	@echo 'Building target: $(BIN_OUTPUT)'
 	@echo 'Invoking: Cross ARM GNU Create Flash Image'
-	$(BIN_TOOL) -O binary $(BIN_PATH)/$(ELF_OUTPUT) $@
+	$(BIN_TOOL) -O binary $(BIN_PATH)\$(ELF_OUTPUT) $@
 	@echo 'Finished building: $(BIN_OUTPUT)'
 	@echo ' '
 
-$(BIN_PATH)/$(SIZE_OUTPUT):
+$(BIN_PATH)\$(SIZE_OUTPUT):
 	@echo 'Building target: $(SIZE_OUTPUT)'
 	@echo 'Invoking: Cross ARM GNU Print Size'
-	$(SIZE_TOOL) --format=berkeley "$(BIN_PATH)/$(ELF_OUTPUT)" > $@
+	$(SIZE_TOOL) --format=berkeley "$(BIN_PATH)\$(ELF_OUTPUT)" > $@
 	@cat $@
 	@echo 'Finished building: $(SIZE_OUTPUT)'
 	@echo ' '
 
-bin: $(BIN_PATH)/$(ELF_OUTPUT) $(BIN_PATH)/$(BIN_OUTPUT) $(BIN_PATH)/$(SIZE_OUTPUT)
+bin: $(BIN_PATH)\$(ELF_OUTPUT) $(BIN_PATH)\$(BIN_OUTPUT) $(BIN_PATH)\$(SIZE_OUTPUT)
 
 
 # -------------
@@ -190,4 +190,4 @@ dir:
 
 # Rule for USB flashing using dfu file manager (vendor id 0483)
 prog:
-	dfu-util -a 0 -s 0x08000000:leave -D $(BIN_PATH)/$(BIN_OUTPUT)
+	C:\Users\Xavier\OneDrive\HEI\HEI 4\Semestre 1\IoT\dfu-util-0.9-win64\dfu-util -a 0 -s 0x08000000:leave -D $(BIN_PATH)\$(BIN_OUTPUT)

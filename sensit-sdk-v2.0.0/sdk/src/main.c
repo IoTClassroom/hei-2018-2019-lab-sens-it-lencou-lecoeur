@@ -1,11 +1,10 @@
 /*!******************************************************************
- * \file main.c
- * \brief Sens'it SDK template
+ * \file main_TEMPERATURE.c
+ * \brief Sens'it Discovery mode Temperature demonstration code
  * \author Sens'it Team
  * \copyright Copyright (c) 2018 Sigfox, All Rights Reserved.
  *
- * This file is an empty main template.
- * You can use it as a basis to develop your own firmware.
+ * For more information on this firmware, see temperature.md.
  *******************************************************************/
 /******* INCLUDES **************************************************/
 #include "sensit_types.h"
@@ -15,12 +14,15 @@
 #include "battery.h"
 #include "radio_api.h"
 #include "hts221.h"
-#include "ltr329.h"
-#include "fxos8700.h"
+#include "discovery.h"
+
+
+/******** DEFINES **************************************************/
+#define MEASUREMENT_PERIOD                 3600 /* Measurement & Message sending period, in second */
 
 
 /******* GLOBAL VARIABLES ******************************************/
-u8 firmware_version[] = "TEMPLATE";
+u8 firmware_version[] = "TEMP_v2.0.0";
 
 
 /*******************************************************************/
@@ -29,7 +31,11 @@ int main()
 {
     error_t err;
     button_e btn;
-    u16 battery_level;
+    bool send = FALSE;
+
+    /* Discovery payload variable */
+    discovery_data_s data = {0};
+    discovery_payload_s payload;
 
     /* Start of initialization */
 
@@ -44,13 +50,8 @@ int main()
     err = HTS221_init();
     ERROR_parser(err);
 
-    /* Initialize light sensor */
-    err = LTR329_init();
-    ERROR_parser(err);
-
-    /* Initialize accelerometer */
-    err = FXOS8700_init();
-    ERROR_parser(err);
+    /* Initialize RTC alarm timer */
+    SENSIT_API_set_rtc_alarm(MEASUREMENT_PERIOD);
 
     /* Clear pending interrupt */
     pending_interrupt = 0;
@@ -62,11 +63,23 @@ int main()
         /* Execution loop */
 
         /* Check of battery level */
-        BATTERY_handler(&battery_level);
+        BATTERY_handler(&(data.battery));
 
         /* RTC alarm interrupt handler */
         if ((pending_interrupt & INTERRUPT_MASK_RTC) == INTERRUPT_MASK_RTC)
         {
+            /* Do a temperatue & relative humidity measurement */
+            err = HTS221_measure(&(data.temperature), &(data.humidity));
+            if (err != HTS221_ERR_NONE)
+            {
+                ERROR_parser(err);
+            }
+            else
+            {
+                /* Set send flag */
+                send = TRUE;
+            }
+
             /* Clear interrupt */
             pending_interrupt &= ~INTERRUPT_MASK_RTC;
         }
@@ -75,7 +88,7 @@ int main()
         if ((pending_interrupt & INTERRUPT_MASK_BUTTON) == INTERRUPT_MASK_BUTTON)
         {
             /* RGB Led ON during count of button presses */
-            SENSIT_API_set_rgb_led(RGB_WHITE);
+            SENSIT_API_set_rgb_led(RGB_GREEN);
 
             /* Count number of presses */
             btn = BUTTON_handler();
@@ -83,7 +96,15 @@ int main()
             /* RGB Led OFF */
             SENSIT_API_set_rgb_led(RGB_OFF);
 
-            if (btn == BUTTON_FOUR_PRESSES)
+            if (btn == BUTTON_TWO_PRESSES)
+            {
+                /* Set button flag to TRUE */
+                data.button = TRUE;
+
+                /* Force a RTC alarm interrupt to do a new measurement */
+                pending_interrupt |= INTERRUPT_MASK_RTC;
+            }
+            else if (btn == BUTTON_FOUR_PRESSES)
             {
                 /* Reset the device */
                 SENSIT_API_reset();
@@ -105,6 +126,24 @@ int main()
         {
             /* Clear interrupt */
             pending_interrupt &= ~INTERRUPT_MASK_FXOS8700;
+        }
+
+        /* Check if we need to send a message */
+        if (send == TRUE)
+        {
+            /* Build the payload */
+            DISCOVERY_build_payload(&payload, MODE_TEMPERATURE, &data);
+
+            /* Send the message */
+            err = RADIO_API_send_message(RGB_GREEN, (u8*)&payload, DISCOVERY_PAYLOAD_SIZE, FALSE, NULL);
+            /* Parse the error code */
+            ERROR_parser(err);
+
+            /* Clear button flag */
+            data.button = FALSE;
+
+            /* Clear send flag */
+            send = FALSE;
         }
 
         /* Check if all interrupt have been clear */
